@@ -149,8 +149,7 @@
 		"networkSecurityGroup": {
 		  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg'))]"
 		},
-		"primary": true
-	
+		"primary": "true"
       }
     },
 	{
@@ -180,7 +179,7 @@
 		"networkSecurityGroup": {
 		  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg'))]"
 		},
-		"primary": false
+		"primary": "false"
       }
     },
     {
