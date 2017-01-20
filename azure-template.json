@@ -179,7 +179,7 @@
         ],
 		"networkSecurityGroup": {
 		  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg'))]"
-		}
+		},
 		"primary": false
       }
     },
