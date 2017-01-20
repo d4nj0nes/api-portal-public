@@ -144,27 +144,9 @@
                 "id": "[variables('subnetRef')]"
               }
             }
-          }
-        ],
-		"networkSecurityGroup": {
-		  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg'))]"
-		},
-		"primary": "true"
-      }
-    },
-	{
-      "apiVersion": "2015-05-01-preview",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('apiNicName')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('apiPublicIPAddressName'))]",
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "apiipconfig",
+          },
+		  {
+            "name": "apiportalipconfig",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
@@ -174,12 +156,11 @@
                 "id": "[variables('subnetRef')]"
               }
             }
-          }
+          },
         ],
 		"networkSecurityGroup": {
 		  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg'))]"
-		},
-		"primary": "false"
+		}
       }
     },
     {
@@ -222,10 +203,6 @@
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
 			  "properties": { "primary": true }
-            },
-			{
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('apiNicName'))]",
-			  "properties": { "primary": false }
             }
           ]
         }
