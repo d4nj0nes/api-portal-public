@@ -135,6 +135,7 @@
           {
             "name": "portalipconfig",
             "properties": {
+			  "primary": true,
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
@@ -148,6 +149,7 @@
 		  {
             "name": "apiportalipconfig",
             "properties": {
+			  "primary": false,
               "privateIPAllocationMethod": "Static",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('apiPublicIPAddressName'))]"
@@ -155,8 +157,7 @@
               "subnet": {
                 "id": "[variables('subnetRef')]"
               }
-            },
-			"primary": false
+            }
           }
         ],
 	"networkSecurityGroup": {
