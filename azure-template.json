@@ -221,11 +221,11 @@
           "networkInterfaces": [
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
-			  "primary": "true"
+			  "properties": { "primary": true }
             },
 			{
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('apiNicName'))]",
-			  "primary": "false"
+			  "properties": { "primary": false }
             }
           ]
         }
