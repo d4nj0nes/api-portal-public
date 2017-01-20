@@ -56,7 +56,7 @@
     "subnetPrefix": "10.0.0.0/24",
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "StrataPortalPublicIPD",
-    "apiPublicIPAddressName":"StrataPortalAPIPublicIPD",
+	"apiPublicIPAddressName":"StrataPortalAPIPublicIPD",
     "publicIPAddressType": "Dynamic",
     "vmStorageAccountContainerName": "vhds",
     "vmName": "StrataPortalDockerVM",
@@ -64,7 +64,7 @@
     "virtualNetworkName": "StrataPortalVNETD",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-    "nsg": "StrataPortalNSG"
+	"nsg": "StrataPortalNSG"
   },
   "resources": [
     {
@@ -141,19 +141,21 @@
               },
               "subnet": {
                 "id": "[variables('subnetRef')]"
-              }
+              },
+			  "primary": true
             }
           },
 		  {
             "name": "apiportalipconfig",
             "properties": {
-              "privateIPAllocationMethod": "Dynamic",
+              "privateIPAllocationMethod": "Static",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('apiPublicIPAddressName'))]"
               },
               "subnet": {
                 "id": "[variables('subnetRef')]"
-              }
+              },
+			  "primary": false
             }
           }
         ],
