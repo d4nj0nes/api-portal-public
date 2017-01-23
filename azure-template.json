@@ -46,32 +46,32 @@
     }
   },
   "variables": {
-    "imagePublisher": "Canonical",
-    "imageOffer": "UbuntuServer",
-    "OSDiskName": "osdiskfordockersimple",
-    "nicName": "StrataPortalVMNicD",
-    "extensionName": "DockerExtension",
-    "addressPrefix": "10.0.0.0/16",
-    "subnetName": "Subnet",
-    "subnetPrefix": "10.0.0.0/24",
-    "storageAccountType": "Standard_LRS",
-    "publicIPAddressName": "StrataPortalPublicIPD",
+  	"imagePublisher": "Canonical",
+	"imageOffer": "UbuntuServer",
+	"OSDiskName": "osdiskfordockersimple",
+	"nicName": "StrataPortalVMNicD",
+	"extensionName": "DockerExtension",
+	"addressPrefix": "10.0.0.0/16",
+	"subnetName": "Subnet",
+	"subnetPrefix": "10.0.0.0/24",
+	"storageAccountType": "Standard_LRS",
+	"publicIPAddressName": "StrataPortalPublicIPD",
 	"apiPublicIPAddressName":"StrataPortalAPIPublicIPD",
-    "publicIPAddressType": "Dynamic",
-    "vmStorageAccountContainerName": "vhds",
-    "vmName": "StrataPortalDockerVM",
-    "vmSize": "Standard_A2_v2",
-    "virtualNetworkName": "StrataPortalVNETD",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
+	"publicIPAddressType": "Dynamic",
+	"vmStorageAccountContainerName": "vhds",
+	"vmName": "StrataPortalDockerVM",
+	"vmSize": "Standard_A2_v2",
+	"virtualNetworkName": "StrataPortalVNETD",
+	"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+	"subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
 	"nsg": "StrataPortalNSG",
 	"availabilitySetName": "StrataPortalAvail",
 	"lbName": "StrataPortalLB",
 	"lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbName'))]",
-    "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndPortal')]",
+	"frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndPortal')]",
 	"apiFrontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndAPI')]",
-    "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/StrataPortalBackendPool')]",
-    "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
+	"lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/StrataPortalBackendPool')]",
+	"lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
 	"publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]",
 	"apiPublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('apiPublicIPAddressName'))]"
   },
@@ -158,16 +158,16 @@
 				 {
                   "id": "[concat(variables('lbID'),'/inboundNatRules/SSL-VM-Portal', copyindex())]"
                 }
-			  ]
+	      ],
               "subnet": {
                 "id": "[variables('subnetRef')]"
               }
             }
           }
         ],
-		"networkSecurityGroup": {
-		  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg'))]"
-		}
+	"networkSecurityGroup": {
+	  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg'))]"
+	}
       }
     },
     {
@@ -178,13 +178,13 @@
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
-		"[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+	"[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('vmSize')]"
         },
-		"availabilitySet": {
+	"availabilitySet": {
           "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySetName'))]"
         },
         "osProfile": {
@@ -211,8 +211,8 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
-			  "properties": { "primary": true }
+              	"id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
+  		"properties": { "primary": true }
             }
           ]
         }
