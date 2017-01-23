@@ -72,8 +72,8 @@
 	"apiFrontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndAPI')]",
 	"lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/StrataPortalBackendPool')]",
 	"lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
-	"publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]",
-	"apiPublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('apiPublicIPAddressName'))]"
+	"publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
+	"apiPublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('apiPublicIPAddressName'))]"
   },
   "resources": [
     {
@@ -352,8 +352,8 @@
       "type": "Microsoft.Network/loadBalancers",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName'))]",
-		"[concat('Microsoft.Network/publicIPAddresses/', parameters('apiPublicIPAddressName'))]"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+		"[concat('Microsoft.Network/publicIPAddresses/', variables('apiPublicIPAddressName'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
