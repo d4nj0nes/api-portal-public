@@ -138,18 +138,21 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-		"[concat('Microsoft.Network/loadBalancers/', variables('lbName'))]"
+	"[concat('Microsoft.Network/loadBalancers/', variables('lbName'))]"
       ],
       "properties": {
         "ipConfigurations": [
           {
             "name": "portalipconfig",
             "properties": {
-				"primary": true,
-				"privateIPAllocationMethod": "Dynamic",
-				"loadBalancerBackendAddressPools": [
+		"primary": true,
+		"privateIPAllocationMethod": "Dynamic",
+		"loadBalancerBackendAddressPools": [
                 {
                   "id": "[concat(variables('lbID'), '/backendAddressPools/StrataPortalBackendPool')]"
+                },
+		{
+                  "id": "[concat(variables('lbID'), '/backendAddressPools/StrataPortalBackendPool2')]"
                 }
               ],
               "loadBalancerInboundNatRules": [
@@ -354,7 +357,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-		"[concat('Microsoft.Network/publicIPAddresses/', variables('apiPublicIPAddressName'))]"
+	"[concat('Microsoft.Network/publicIPAddresses/', variables('apiPublicIPAddressName'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -366,7 +369,7 @@
               }
             }
           },
-		  {
+	  {
             "name": "LoadBalancerFrontEndAPI",
             "properties": {
               "publicIPAddress": {
@@ -429,7 +432,7 @@
               }
             }
           },
-		  {
+	  {
             "name": "LBRuleApi",
             "properties": {
               "frontendIPConfiguration": {
