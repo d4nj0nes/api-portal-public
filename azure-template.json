@@ -73,7 +73,7 @@
     "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/StrataPortalBackendPool')]",
     "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
 	"publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]",
-	"apiPublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('apiPublicIPAddressName'))]",
+	"apiPublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('apiPublicIPAddressName'))]"
   },
   "resources": [
     {
