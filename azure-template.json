@@ -71,6 +71,7 @@
 	"frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndPortal')]",
 	"apiFrontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndAPI')]",
 	"lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/StrataPortalBackendPool')]",
+	"lbPoolID2": "[concat(variables('lbID'),'/backendAddressPools/StrataPortalBackendPool2')]",
 	"lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
 	"publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
 	"apiPublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',variables('apiPublicIPAddressName'))]"
@@ -377,6 +378,9 @@
         "backendAddressPools": [
           {
             "name": "StrataPortalBackendPool"
+          },
+	  {
+            "name": "StrataPortalBackendPool2"
           }
         ],
         "inboundNatRules": [
@@ -432,7 +436,7 @@
                 "id": "[variables('apiFrontEndIPConfigID')]"
               },
               "backendAddressPool": {
-                "id": "[variables('lbPoolID')]"
+                "id": "[variables('lbPoolID2')]"
               },
               "protocol": "tcp",
               "frontendPort": 443,
