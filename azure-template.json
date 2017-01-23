@@ -153,10 +153,10 @@
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(variables('lbID'),'/inboundNatRules/SSL-VM-Api', copyindex())]"
+                  "id": "[concat(variables('lbID'),'/inboundNatRules/SSL-VM-Api')]"
                 },
 				 {
-                  "id": "[concat(variables('lbID'),'/inboundNatRules/SSL-VM-Portal', copyindex())]"
+                  "id": "[concat(variables('lbID'),'/inboundNatRules/SSL-VM-Portal')]"
                 }
 	      ],
               "subnet": {
