@@ -64,7 +64,16 @@
     "virtualNetworkName": "StrataPortalVNETD",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-	"nsg": "StrataPortalNSG"
+	"nsg": "StrataPortalNSG",
+	"availabilitySetName": "StrataPortalAvail",
+	"lbName": "StrataPortalLB",
+	"lbID": "[resourceId('Microsoft.Network/loadBalancers',variables('lbName'))]",
+    "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndPortal')]",
+	"apiFrontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEndAPI')]",
+    "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/StrataPortalBackendPool')]",
+    "lbProbeID": "[concat(variables('lbID'),'/probes/tcpProbe')]",
+	"publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]",
+	"apiPublicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('apiPublicIPAddressName'))]",
   },
   "resources": [
     {
@@ -127,19 +136,29 @@
       "name": "[variables('nicName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+		"[concat('Microsoft.Network/loadBalancers/', variables('lbName'))]"
       ],
       "properties": {
         "ipConfigurations": [
           {
             "name": "portalipconfig",
             "properties": {
-			"primary": true,
-              "privateIPAllocationMethod": "Dynamic",
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
-              },
+				"primary": true,
+				"privateIPAllocationMethod": "Dynamic",
+				"loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(variables('lbID'), '/backendAddressPools/StrataPortalBackendPool')]"
+                }
+              ],
+              "loadBalancerInboundNatRules": [
+                {
+                  "id": "[concat(variables('lbID'),'/inboundNatRules/SSL-VM-Api', copyindex())]"
+                },
+				 {
+                  "id": "[concat(variables('lbID'),'/inboundNatRules/SSL-VM-Portal', copyindex())]"
+                }
+			  ]
               "subnet": {
                 "id": "[variables('subnetRef')]"
               }
@@ -158,11 +177,15 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
+		"[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('vmSize')]"
+        },
+		"availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySetName'))]"
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
@@ -189,7 +212,7 @@
           "networkInterfaces": [
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]",
-	      "properties": { "primary": true }
+			  "properties": { "primary": true }
             }
           ]
         }
@@ -315,6 +338,125 @@
 	    },
 	    "resources": [],
 	    "dependsOn": []
-	}
+	},
+	{
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('availabilitySetName')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {}
+    },
+	{
+      "apiVersion": "2015-05-01-preview",
+      "name": "[parameters('lbName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName'))]",
+		"[concat('Microsoft.Network/publicIPAddresses/', parameters('apiPublicIPAddressName'))]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LoadBalancerFrontEndPortal",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[variables('publicIPAddressID')]"
+              }
+            }
+          },
+		  {
+            "name": "LoadBalancerFrontEndAPI",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[variables('apiPublicIPAddressID')]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "StrataPortalBackendPool"
+          }
+        ],
+        "inboundNatRules": [
+          {
+            "name": "SSL-VM-Portal",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('frontEndIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 50001,
+              "backendPort": 443,
+              "enableFloatingIP": false
+            }
+          },
+          {
+            "name": "SSL-VM-Api",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('apiFrontEndIPConfigID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 50002,
+              "backendPort": 443,
+              "enableFloatingIP": false
+            }
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "LBRule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('frontEndIPConfigID')]"
+              },
+              "backendAddressPool": {
+                "id": "[variables('lbPoolID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 443,
+              "backendPort": 443,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[variables('lbProbeID')]"
+              }
+            }
+          },
+		  {
+            "name": "LBRuleApi",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('apiFrontEndIPConfigID')]"
+              },
+              "backendAddressPool": {
+                "id": "[variables('lbPoolID')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 443,
+              "backendPort": 443,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[variables('lbProbeID')]"
+              }
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "tcpProbe",
+            "properties": {
+              "protocol": "tcp",
+              "port": 443,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          }
+        ]
+      }
+    }
   ]
 }
