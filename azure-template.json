@@ -2,36 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "newStorageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
-      }
-    },
-    "adminUsername": {
-      "type": "string",
-      "metadata": {
-        "description": "Username for the Virtual Machine."
-      }
-    },
-    "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Password for the Virtual Machine."
-      }
-    },
-    "dnsNameForPublicIP": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
-      }
-    },
-	"dnsNameForApiPublicIP": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
-      }
-    },
     "ubuntuOSVersion": {
       "type": "string",
       "defaultValue": "14.04.4-LTS",
@@ -46,6 +16,11 @@
     }
   },
   "variables": {
+	"newStorageAccountName": "strataportalstorage",
+	"adminUsername": "stratag4dm1n",
+	"adminPassword": "str4t4P0rt4l",
+	"dnsNameForPublicIP": "strata-portal",
+	"dnsNameForApiPublicIP": "strata-portal-api",
   	"imagePublisher": "Canonical",
 	"imageOffer": "UbuntuServer",
 	"OSDiskName": "osdiskfordockersimple",
@@ -94,7 +69,7 @@
       "properties": {
         "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+          "domainNameLabel": "[variables('dnsNameForPublicIP')]"
         }
       }
     },
@@ -106,7 +81,7 @@
       "properties": {
         "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[parameters('dnsNameForApiPublicIP')]"
+          "domainNameLabel": "[variables('dnsNameForApiPublicIP')]"
         }
       }
     },
@@ -180,7 +155,7 @@
       "name": "[variables('vmName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
 	"[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
@@ -193,8 +168,8 @@
         },
         "osProfile": {
           "computerName": "[variables('vmName')]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
+          "adminUsername": "[variables('adminUsername')]",
+          "adminPassword": "[variables('adminPassword')]"
         },
         "storageProfile": {
           "imageReference": {
@@ -206,7 +181,7 @@
           "osDisk": {
             "name": "osdisk1",
             "vhd": {
-              "uri": "[concat('http://',parameters('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
+              "uri": "[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
