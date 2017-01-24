@@ -369,9 +369,9 @@
                 "id": "[variables('frontEndIPConfigID')]"
               },
               "protocol": "tcp",
-              "frontendPort": 50001,
+              "frontendPort": 443,
               "backendPort": 443,
-              "enableFloatingIP": true
+              "enableFloatingIP": false
             }
           },
           {
@@ -381,9 +381,9 @@
                 "id": "[variables('apiFrontEndIPConfigID')]"
               },
               "protocol": "tcp",
-              "frontendPort": 50002,
-              "backendPort": 443,
-              "enableFloatingIP": true
+              "frontendPort": 443,
+              "backendPort": 444,
+              "enableFloatingIP": false
             }
           }
         ]
